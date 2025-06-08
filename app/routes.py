@@ -90,3 +90,22 @@ def seed_db():
     db.session.commit()
 
     return jsonify({'message': 'Database seeded with test data'}), 200
+
+
+@api.route('/accounts', methods=['GET'])
+def get_accounts():
+    """Return all accounts with basic info and balance."""
+    accounts = Account.query.all()
+    result = []
+    for account in accounts:
+        balance = sum(t.amount for t in account.transactions)
+        result.append(
+            {
+                'name': account.name,
+                'type': account.account_type,
+                'last4': account.last4,
+                'balance': balance,
+            }
+        )
+
+    return jsonify(result), 200
