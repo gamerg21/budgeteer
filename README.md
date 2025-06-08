@@ -119,4 +119,6 @@ python -m http.server 3000
 ```
 
 Then open <http://localhost:3000> in your browser. The page will display months
-and accounts from the test database.
+and accounts from the test database. The `script.js` file fetches this data and
+renders it inside a `<div id="data"></div>` element. If nothing renders, open the
+browser console to check for JavaScript errors.
