@@ -106,4 +106,17 @@ docker run -p 5000:5000 budgeteer
  Add user authentication
  Export reports to CSV
  Add recurring expense logic
-Make UI PWA/mobile-installable
+ Make UI PWA/mobile-installable
+
+## 🖥 Frontend Quick Start
+
+A basic HTML frontend is available in the `frontend/` directory. Start a small
+static server there so the page can query the API running on port `5000`:
+
+```bash
+cd frontend
+python -m http.server 3000
+```
+
+Then open <http://localhost:3000> in your browser. The page will display months
+and accounts from the test database.
