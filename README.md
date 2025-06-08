@@ -7,7 +7,7 @@
 ## 🚀 Features
 
 - Monthly tracking of expenses, balances, and payments
-- Credit card-level breakdowns
+- Account-level breakdowns (credit cards and bank accounts)
 - Statement due dates and payment records
 - Mobile-friendly UI (coming soon)
 - Fully self-hosted with Docker support
@@ -53,39 +53,41 @@ budgeteer/
 
 ---
 
-### `credit_cards`
-| Field         | Type    | Description               |
-|---------------|---------|---------------------------|
-| id            | INTEGER | Primary key               |
-| name          | TEXT    | e.g., "Amex Gold"         |
-| issuer        | TEXT    | e.g., "American Express"  |
-| last4         | TEXT    | Last 4 digits of card     |
-| credit_limit  | REAL    | Optional limit            |
+### `accounts`
+| Field        | Type    | Description                              |
+|--------------|---------|------------------------------------------|
+| id           | INTEGER | Primary key                              |
+| name         | TEXT    | Account name                             |
+| account_type | TEXT    | `bank` or `credit_card`                  |
+| issuer       | TEXT    | Bank or card issuer                      |
+| last4        | TEXT    | Last 4 digits (if applicable)            |
+| credit_limit | REAL    | Optional limit for credit card accounts  |
 
 ---
 
-### `expenses`
-| Field        | Type    | Description                            |
-|--------------|---------|----------------------------------------|
-| id           | INTEGER | Primary key                            |
-| month_id     | INTEGER | Foreign key to `months`                |
-| card_id      | INTEGER | Foreign key to `credit_cards`          |
-| date         | DATE    | Expense date                           |
-| description  | TEXT    | Merchant or label                      |
-| amount       | REAL    | Expense amount                         |
-| category     | TEXT    | Optional tag (e.g., groceries, fuel)   |
+### `transactions`
+| Field            | Type    | Description                                          |
+|------------------|---------|------------------------------------------------------|
+| id               | INTEGER | Primary key                                          |
+| month_id         | INTEGER | Foreign key to `months`                              |
+| account_id       | INTEGER | Foreign key to `accounts`                            |
+| date             | DATE    | Transaction date                                     |
+| description      | TEXT    | Merchant or label                                    |
+| amount           | REAL    | Transaction amount (positive or negative)            |
+| category         | TEXT    | Optional tag (e.g., groceries, fuel)                 |
+| transaction_type | TEXT    | Optional indicator like `debit` or `credit`          |
 
 ---
 
 ### `statements`
-| Field             | Type    | Description                      |
-|-------------------|---------|----------------------------------|
-| id                | INTEGER | Primary key                      |
-| card_id           | INTEGER | Foreign key to `credit_cards`    |
-| month_id          | INTEGER | Foreign key to `months`          |
-| statement_balance | REAL    | Closing balance for the period   |
-| due_date          | DATE    | Due date for that month’s bill   |
-| payment_made      | REAL    | Amount paid                      |
+| Field             | Type    | Description                               |
+|-------------------|---------|-------------------------------------------|
+| id                | INTEGER | Primary key                               |
+| account_id        | INTEGER | Foreign key to `accounts` (credit cards)  |
+| month_id          | INTEGER | Foreign key to `months`                   |
+| statement_balance | REAL    | Closing balance for the period            |
+| due_date          | DATE    | Due date for that month’s bill            |
+| payment_made      | REAL    | Amount paid                               |
 
 ---
 
@@ -97,11 +99,11 @@ docker build -t budgeteer .
 
 # Run the app on port 5000
 docker run -p 5000:5000 budgeteer
-
+```
 
 ✅ TODO
  Build React frontend
  Add user authentication
  Export reports to CSV
  Add recurring expense logic
- Make UI PWA/mobile-installable
+Make UI PWA/mobile-installable
