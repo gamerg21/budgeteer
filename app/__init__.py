@@ -15,4 +15,8 @@ def create_app():
     from .routes import api
     app.register_blueprint(api)
 
+    # Auto-create tables if they don't exist
+    with app.app_context():
+        db.create_all()
+
     return app
