@@ -13,6 +13,32 @@
 <body>
     <h1>Budgeteer Data</h1>
     <div id="data"></div>
+
+    <h2>Transactions</h2>
+    <div id="transactions"></div>
+
+    <h3>Add Transaction</h3>
+    <form id="tx-form">
+        <label for="tx-month">Month:</label>
+        <select id="tx-month"></select>
+
+        <label for="tx-account">Account:</label>
+        <select id="tx-account"></select>
+
+        <label for="tx-date">Date:</label>
+        <input type="date" id="tx-date" required>
+
+        <label for="tx-desc">Description:</label>
+        <input type="text" id="tx-desc" required>
+
+        <label for="tx-amount">Amount:</label>
+        <input type="number" step="0.01" id="tx-amount" required>
+
+        <label for="tx-category">Category:</label>
+        <input type="text" id="tx-category" required>
+
+        <button type="submit">Add</button>
+    </form>
     <script src="script.js"></script>
 </body>
 </html>

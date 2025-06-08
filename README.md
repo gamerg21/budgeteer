@@ -111,7 +111,9 @@ docker run -p 5000:5000 budgeteer
 ## 🖥 Frontend Quick Start
 
 A basic HTML frontend is available in the `frontend/` directory. Start a small
-static server there so the page can query the API running on port `5000`:
+static server there so the page can query the API running on port `5000`.
+The page now lists transactions for the selected month and includes a form to
+add new transactions via the API:
 
 ```bash
 cd frontend
