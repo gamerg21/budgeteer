@@ -154,3 +154,32 @@ def create_transaction():
     db.session.commit()
 
     return jsonify({'id': transaction.id, 'message': 'Transaction created'}), 201
+
+
+@api.route('/transactions', methods=['GET'])
+def get_transactions():
+    """Return transactions for a given month, optionally filtered by account."""
+    month_id = request.args.get('month_id', type=int)
+    if not month_id:
+        return jsonify({'error': 'month_id query parameter is required'}), 400
+
+    account_id = request.args.get('account_id', type=int)
+
+    query = Transaction.query.join(Account).filter(Transaction.month_id == month_id)
+    if account_id:
+        query = query.filter(Transaction.account_id == account_id)
+
+    transactions = query.order_by(Transaction.date).all()
+
+    result = [
+        {
+            'account': tx.account.name,
+            'category': tx.category,
+            'date': tx.date.isoformat(),
+            'description': tx.description,
+            'amount': tx.amount,
+        }
+        for tx in transactions
+    ]
+
+    return jsonify(result), 200
