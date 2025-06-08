@@ -1,5 +1,5 @@
-from flask import Blueprint, jsonify
-from datetime import date
+from flask import Blueprint, jsonify, request
+from datetime import date, datetime
 
 from . import db
 from .models import Account, Month, Transaction
@@ -109,3 +109,48 @@ def get_accounts():
         )
 
     return jsonify(result), 200
+
+
+@api.route('/transactions', methods=['POST'])
+def create_transaction():
+    """Create a new transaction."""
+    data = request.get_json() or {}
+
+    required_fields = [
+        'account_id',
+        'month_id',
+        'date',
+        'amount',
+        'description',
+        'category',
+    ]
+
+    missing = [field for field in required_fields if field not in data]
+    if missing:
+        return (
+            jsonify({'error': f"Missing fields: {', '.join(missing)}"}),
+            400,
+        )
+
+    try:
+        tx_date = (
+            datetime.strptime(data['date'], '%Y-%m-%d').date()
+            if isinstance(data['date'], str)
+            else data['date']
+        )
+    except (TypeError, ValueError):
+        return jsonify({'error': 'Invalid date format, expected YYYY-MM-DD'}), 400
+
+    transaction = Transaction(
+        account_id=data['account_id'],
+        month_id=data['month_id'],
+        date=tx_date,
+        amount=data['amount'],
+        description=data['description'],
+        category=data['category'],
+    )
+
+    db.session.add(transaction)
+    db.session.commit()
+
+    return jsonify({'id': transaction.id, 'message': 'Transaction created'}), 201
