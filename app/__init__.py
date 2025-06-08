@@ -4,10 +4,13 @@ from flask_cors import CORS
 
 db = SQLAlchemy()
 
-def create_app():
+def create_app(test_config=None):
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    if test_config is None:
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
+    else:
+        app.config.update(test_config)
+    app.config.setdefault('SQLALCHEMY_TRACK_MODIFICATIONS', False)
 
     db.init_app(app)
     CORS(app)
