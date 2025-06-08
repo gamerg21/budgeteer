@@ -92,6 +92,24 @@ def seed_db():
     return jsonify({'message': 'Database seeded with test data'}), 200
 
 
+@api.route('/months', methods=['GET'])
+def get_months():
+    """Return all month records."""
+    months = Month.query.order_by(Month.start_date).all()
+    result = [
+        {
+            'id': month.id,
+            'name': month.name,
+            'year': month.year,
+            'start_date': month.start_date.isoformat(),
+            'end_date': month.end_date.isoformat(),
+        }
+        for month in months
+    ]
+
+    return jsonify(result), 200
+
+
 @api.route('/accounts', methods=['GET'])
 def get_accounts():
     """Return all accounts with basic info and balance."""
