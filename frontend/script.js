@@ -1,3 +1,4 @@
+// Fetch months and accounts from the Flask API and render simple tables
 const apiBase = 'http://localhost:5000';
 
 async function fetchData(endpoint) {
