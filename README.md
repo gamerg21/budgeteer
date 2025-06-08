@@ -25,19 +25,19 @@
 ---
 
 ## 📂 Project Structure
+<pre><code>
 budgeteer/
 ├── app/
-│ ├── init.py # App factory
-│ ├── models.py # SQLAlchemy models
-│ ├── routes.py # RESTful API routes
-│ ├── db.sqlite3 # Local dev database
-├── run.py # Main app runner
-├── requirements.txt # Python dependencies
-├── Dockerfile # Docker build
+│   ├── __init__.py       # App factory
+│   ├── models.py         # SQLAlchemy models
+│   ├── routes.py         # RESTful API routes
+│   ├── db.sqlite3        # Local dev database
+├── run.py                # Main app runner
+├── requirements.txt      # Python dependencies
+├── Dockerfile            # Docker build
 ├── .gitignore
 └── README.md
-
-
+</code> </pre>
 ---
 
 ## 🧮 Database Schema
