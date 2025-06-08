@@ -211,3 +211,55 @@ def get_statements():
     ]
 
     return jsonify(result), 200
+
+
+@api.route('/statements', methods=['POST'])
+def create_or_update_statement():
+    """Create or update a statement entry."""
+    data = request.get_json() or {}
+
+    required_fields = [
+        'account_id',
+        'month_id',
+        'statement_balance',
+        'due_date',
+        'payment_made',
+    ]
+
+    missing = [field for field in required_fields if field not in data]
+    if missing:
+        return (
+            jsonify({'error': f"Missing fields: {', '.join(missing)}"}),
+            400,
+        )
+
+    try:
+        due_date = (
+            datetime.strptime(data['due_date'], '%Y-%m-%d').date()
+            if isinstance(data['due_date'], str)
+            else data['due_date']
+        )
+    except (TypeError, ValueError):
+        return jsonify({'error': 'Invalid date format, expected YYYY-MM-DD'}), 400
+
+    stmt = Statement.query.filter_by(
+        account_id=data['account_id'], month_id=data['month_id']
+    ).first()
+
+    if stmt:
+        stmt.statement_balance = data['statement_balance']
+        stmt.due_date = due_date
+        stmt.payment_made = data['payment_made']
+    else:
+        stmt = Statement(
+            account_id=data['account_id'],
+            month_id=data['month_id'],
+            statement_balance=data['statement_balance'],
+            due_date=due_date,
+            payment_made=data['payment_made'],
+        )
+        db.session.add(stmt)
+
+    db.session.commit()
+
+    return jsonify({'id': stmt.id, 'message': 'Statement saved'}), 200
