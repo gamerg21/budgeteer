@@ -1,0 +1,27 @@
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# VS Code settings
+.vscode/
+
+# Environment variables / secrets
+.env
+
+# SQLite database
+*.sqlite3
+*.db
+
+# MacOS and Windows crap
+.DS_Store
+Thumbs.db
+
+# Flask instance folder (if used)
+instance/
+
+# Docker
+*.pid
+*.tar
