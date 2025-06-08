@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from datetime import date, datetime
 
 from . import db
-from .models import Account, Month, Transaction
+from .models import Account, Month, Transaction, Statement
 
 api = Blueprint('api', __name__)
 
@@ -180,6 +180,34 @@ def get_transactions():
             'amount': tx.amount,
         }
         for tx in transactions
+    ]
+
+    return jsonify(result), 200
+
+
+@api.route('/statements', methods=['GET'])
+def get_statements():
+    """Return statements for a given month."""
+    month_id = request.args.get('month_id', type=int)
+    if not month_id:
+        return jsonify({'error': 'month_id query parameter is required'}), 400
+
+    statements = (
+        Statement.query.join(Account)
+        .filter(Statement.month_id == month_id)
+        .order_by(Statement.due_date)
+        .all()
+    )
+
+    result = [
+        {
+            'account_id': stmt.account_id,
+            'account_name': stmt.account.name,
+            'statement_balance': stmt.statement_balance,
+            'due_date': stmt.due_date.isoformat(),
+            'payment_made': stmt.payment_made,
+        }
+        for stmt in statements
     ]
 
     return jsonify(result), 200
